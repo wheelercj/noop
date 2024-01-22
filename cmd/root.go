@@ -23,6 +23,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+var version = "v0.0.1"
 var cfgFile string
 
 var values = map[string]int{
@@ -52,20 +53,10 @@ var values = map[string]int{
 	"M": 1000,
 }
 
-func runFunc(cmd *cobra.Command, args []string) error {
-	sum, err := add(args[0])
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(sum)
-	return nil
-}
-
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:     "noop number",
-	Version: "v0.0.1",
+	Use:     "noop [number]",
+	Version: version,
 	Short:   "A calculator with no operators",
 	Long: `A calculator with no operators
 
@@ -73,8 +64,37 @@ All digits are added together. Only single-character numbers can be
 used, including Roman numeral characters. If the input has a period,
 the digits to its left are negative.
 `,
-	Args: cobra.ExactArgs(1),
+	Args: cobra.MaximumNArgs(1),
 	RunE: runFunc,
+}
+
+func runFunc(cmd *cobra.Command, args []string) error {
+	if len(args) == 1 {
+		sum, err := add(args[0])
+		if err != nil {
+			return err
+		}
+		fmt.Println(sum)
+	} else {
+		fmt.Println("noop", version)
+		// REPL (read eval print loop)
+		for {
+			fmt.Print(">>> ")
+			var input string
+			_, err := fmt.Scanln(&input)
+			if err != nil {
+				return err
+			}
+			sum, err := add(input)
+			if err != nil {
+				fmt.Println("Error:", err)
+			} else {
+				fmt.Printf(" = %d\n", sum)
+			}
+		}
+	}
+
+	return nil
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
