@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var version = "v0.0.1"
+var version = "v0.0.2"
 var cfgFile string
 
 var values = map[string]int{
@@ -69,32 +69,35 @@ the digits to its left are negative.
 }
 
 func runFunc(cmd *cobra.Command, args []string) error {
-	if len(args) == 1 {
+	if len(args) == 0 {
+		fmt.Println("noop", version)
+		return repl()
+	} else {
 		sum, err := add(args[0])
 		if err != nil {
 			return err
 		}
 		fmt.Println(sum)
-	} else {
-		fmt.Println("noop", version)
-		// REPL (read eval print loop)
-		for {
-			fmt.Print(">>> ")
-			var input string
-			_, err := fmt.Scanln(&input)
-			if err != nil {
-				return err
-			}
-			sum, err := add(input)
-			if err != nil {
-				fmt.Println("Error:", err)
-			} else {
-				fmt.Printf(" = %d\n", sum)
-			}
+		return nil
+	}
+}
+
+// repl is a Read Eval Print Loop. It can be exited with a keyboard interrupt.
+func repl() error {
+	for {
+		fmt.Print(">>> ")
+		var input string
+		_, err := fmt.Scanln(&input)
+		if err != nil {
+			return err
+		}
+		sum, err := add(input)
+		if err != nil {
+			fmt.Println("Error:", err)
+		} else {
+			fmt.Println(sum)
 		}
 	}
-
-	return nil
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
