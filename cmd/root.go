@@ -20,11 +20,9 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-var version = "v0.0.3"
-var cfgFile string
+var version = "v0.0.4"
 
 var values = map[string]int{
 	"0": 0,
@@ -110,31 +108,6 @@ func Execute() {
 }
 
 func init() {
-	// cobra.OnInitialize(initConfig)
-}
-
-// initConfig reads in config file and ENV variables if set.
-func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
-
-		// Search config in home directory with name ".noop" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigType("yaml")
-		viper.SetConfigName(".noop")
-	}
-
-	viper.AutomaticEnv() // read in environment variables that match
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
-	}
 }
 
 func add(numStr string) (int, error) {
@@ -146,7 +119,7 @@ func add(numStr string) (int, error) {
 			if periodFound {
 				return 0, fmt.Errorf("multiple periods")
 			}
-			sum *= -1
+			sum = -sum
 			periodFound = true
 		} else if v, ok := values[s]; ok {
 			sum += v
