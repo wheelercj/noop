@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var version = "v0.0.2"
+var version = "v0.0.3"
 var cfgFile string
 
 var values = map[string]int{
