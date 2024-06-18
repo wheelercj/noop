@@ -14,4 +14,4 @@ If you only need addition and subtraction, this way is sometimes faster. The hom
 
 ## download
 
-`go install github.com/wheelercj/noop`
+`go install github.com/wheelercj/noop@latest`
